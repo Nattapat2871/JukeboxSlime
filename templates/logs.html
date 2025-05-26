@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Console Logs</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #d4d4d4; margin: 0; padding: 20px; }
+        .log-container { background-color: #252526; border: 1px solid #333; padding: 10px; border-radius: 4px; max-height: 80vh; overflow-y: auto; }
+        .log-entry { border-bottom: 1px solid #3c3c3c; padding: 5px 0; }
+        .log-entry:last-child { border-bottom: none; }
+        .INFO { color: #569cd6; }
+        .WARNING { color: #cd9731; }
+        .ERROR { color: #f44747; }
+        .CRITICAL { color: #ff0000; font-weight: bold; }
+        .DEBUG { color: #b5cea8; }
+        .header { margin-bottom: 20px; }
+        .refresh-btn { padding: 10px; background-color: #007acc; color: white; border: none; cursor: pointer; margin-bottom: 10px; border-radius: 3px;}
+        .refresh-btn:hover { background-color: #005a9e; }
+        a { color: #569cd6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bot Console Logs (ล่าสุด {{ logs|length }} บรรทัดจาก {{ costante.MAX_LOG_LINES }})</h1>
+        <button class="refresh-btn" onclick="location.reload()">Refresh Logs</button>
+        <p><a href="/logs/json" target="_blank">View as JSON</a></p>
+    </div>
+    <div class="log-container">
+        {% for log_line in logs %}
+            {% set parts = log_line.split(' - ', 2) %}
+            {% set level = parts[1] if parts|length > 2 else 'DEFAULT' %}
+            <div class="log-entry {{ level }}">{{ log_line }}</div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Auto scroll to bottom
+        const logContainer = document.querySelector('.log-container');
+        logContainer.scrollTop = logContainer.scrollHeight;
+
+        // Optional: Auto-refresh (uncomment to enable)
+        /*
+        setTimeout(function(){
+           window.location.reload(true); // true forces reload from server
+        }, 15000); // Refresh ทุก 15 วินาที
+        */
+    </script>
+</body>
+</html>
